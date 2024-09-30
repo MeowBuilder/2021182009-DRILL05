@@ -2,7 +2,7 @@ from pico2d import *
 
 open_canvas()
 
-grass = load_image('grass.png')
+ground = load_image('TUK_GROUND.png')
 character = load_image('run.png')
 idle = load_image('idle.png')
 
@@ -12,15 +12,17 @@ diry = 0
 x = 800//2
 y = 400//2
 frame = 0
+idle_frame = 0
 running = True
 
 def handle_events():
-    global face,running,dirx,diry
+    global face,running,dirx,diry,idle_frame
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT or event.key == SDLK_ESCAPE:
             running = False
         elif event.type == SDL_KEYDOWN:
+            idle_frame = 0
             if event.key == SDLK_DOWN:
                 face = 1
                 diry -= 1
@@ -44,14 +46,15 @@ def handle_events():
                 dirx -= 1
 
 def draw_character():
-    global frame,x,y
+    global idle_frame,frame,x,y
     clear_canvas()
-    grass.draw(400, 30)
+    ground.draw(400, 300)
     if dirx == 0 and diry == 0: #idle상태
-        idle.clip_draw(32 + (frame * 80),32 + (face * 80),16,16,x,y,80,80)
+        idle.clip_draw(32 + (idle_frame * 80),32 + (face * 80),16,16,x,y,80,80)
     else:
         character.clip_draw(32 + (frame * 80),32 + (face * 80),16,16,x,y,80,80)
     update_canvas()
+    idle_frame = (idle_frame+1) % 4
     frame = (frame + 1) % 8
 
 def move_character():
