@@ -2,9 +2,8 @@ from pico2d import *
 
 open_canvas()
 
-ground = load_image('TUK_GROUND.png')
-character = load_image('run.png')
-idle = load_image('idle.png')
+ground = load_image('ground.png')
+character = load_image('character.png')
 
 face = 0
 dirx = 0
@@ -50,26 +49,28 @@ def draw_character():
     clear_canvas()
     ground.draw(400, 300)
     if dirx == 0 and diry == 0: #idle상태
-        idle.clip_draw(32 + (idle_frame * 80),32 + (face * 80),16,16,x,y,80,80)
+        character.clip_draw((idle_frame * 64),(face * 32),64,32,x,y,80,80)
     else:
-        character.clip_draw(32 + (frame * 80),32 + (face * 80),16,16,x,y,80,80)
+        character.clip_draw((frame * 32),128 + (face * 32),32,32,x,y,80,80)
     update_canvas()
-    idle_frame = (idle_frame+1) % 4
+    idle_frame = (idle_frame + 1) % 4
     frame = (frame + 1) % 8
 
 def move_character():
     global x,y
     if not ((x + dirx * 5) >= 800 or (x + dirx * 5) < 0):
-        x += dirx * 10
+        x += dirx * 5
     if not ((y + diry * 5) >= 600 or (y + diry * 5) < 0):
-        y += diry * 10
+        y += diry * 5
 
 while running:
     draw_character()
     handle_events()
     move_character()
-    delay(0.05)
-
+    if dirx == 0 and diry == 0:
+        delay(0.1)
+    else:
+        delay(0.05)
 
 
 close_canvas()
